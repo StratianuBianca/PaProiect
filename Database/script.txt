@@ -1,0 +1,10 @@
+CALL apoc.load.json("https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/countries%2Bstates%2Bcities.json")
+YIELD value
+MERGE (c:Country {name: value.name })
+WITH c, value
+FOREACH(state in value.states |
+MERGE (s:State {name:state.name})
+MERGE (s)-[:STATE_OF]->(c)
+FOREACH(city in state.cities |
+MERGE(d:City {name:city.name})
+MERGE (d)-[:CITY_OF]->(s)))
