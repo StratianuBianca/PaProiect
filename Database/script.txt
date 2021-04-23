@@ -8,3 +8,8 @@ MERGE (s)-[:STATE_OF]->(c)
 FOREACH(city in state.cities |
 MERGE(d:City {name:city.name})
 MERGE (d)-[:CITY_OF]->(s)))
+
+
+
+
+MATCH (Country {name: "Romania"})<-[:STATE_OF]-(State {name:"Olt County"}) <-[:CITY_OF]-(City {name:"Rotunda"}) RETURN City
