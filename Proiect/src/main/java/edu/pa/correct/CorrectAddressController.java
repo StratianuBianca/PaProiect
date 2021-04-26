@@ -17,10 +17,10 @@ public class CorrectAddressController {
     private final CorrectAddressService correctAddressService;
 
     @GetMapping(path = "correct")
-    public ResponseEntity<String> correct(@RequestBody CorrectAddress correctAddress) {
+    public ResponseEntity<String> correct(@RequestBody Address address) {
         String response = "";
         try {
-            response = correctAddressService.correct(correctAddress);
+            response = correctAddressService.correct(address);
         } catch (IllegalStateException exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.FORBIDDEN);
         }
