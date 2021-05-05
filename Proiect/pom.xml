@@ -43,10 +43,16 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.neo4j.driver</groupId>
+            <artifactId>neo4j-java-driver</artifactId>
+            <version>4.2.0</version>
+        </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-jdbc-driver</artifactId>
-            <version>3.4.0</version>
+            <artifactId>neo4j</artifactId>
+            <version>3.5.12</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
