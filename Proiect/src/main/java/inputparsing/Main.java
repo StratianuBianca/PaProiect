@@ -1,6 +1,6 @@
 package inputparsing;
 
-import edu.pa.correct.Address;
+import edu.pa.correct.*;
 
 import java.util.Scanner;
 

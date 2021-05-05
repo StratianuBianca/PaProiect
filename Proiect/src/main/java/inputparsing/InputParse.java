@@ -1,6 +1,7 @@
 package inputparsing;
 
-import edu.pa.correct.Address;
+import edu.pa.correct.*;
+
 
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -71,7 +72,7 @@ public class InputParse {
         if(isValid(address.getCountry())) makeStandard(address.getCountry(),InputType.COUNTRY);
         if(isValid(address.getCity())) makeStandard(address.getCity(), InputType.CITY);
         if(isValid(address.getCounty())) makeStandard(address.getCounty(),InputType.COUNTY);
-        if(isValid(address.getPostalCode())) makeStandard(address.getPostalCode(), InputType.OTHERS);
+        if(isValid(address.getPostalCode())) makeStandard(address.getPostalCode(),InputType.OTHERS);
         if(isValid(address.getStreetAddress())) makeStandard(address.getStreetAddress(), InputType.OTHERS);
         System.out.println(parsedInput);
     }

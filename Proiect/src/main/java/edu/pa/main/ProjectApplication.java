@@ -1,6 +1,6 @@
 package edu.pa.main;
 
-import edu.pa.correct.CorrectAddressController;
+import edu.pa.correct.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
