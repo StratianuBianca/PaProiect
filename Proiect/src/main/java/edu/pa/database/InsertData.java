@@ -1,15 +1,47 @@
 package edu.pa.database;
 
+import edu.pa.database.model.City;
+import edu.pa.database.repository.AbstractRepository;
 import org.neo4j.driver.*;
 
-import java.io.File;
-import java.sql.*;
 
-import static org.neo4j.driver.Values.parameters;
+
 
 public class InsertData {
 
-    public static void main(String[] args) {
+    /*private final Driver driver = GraphDatabase.driver( "bolt://localhost:7687", AuthTokens.basic( "neo4j", "student" ) );
+
+
+
+    private Session sessionFor(String database) {
+        if (database == null) {
+            return driver.session();
+        }
+        return driver.session(SessionConfig.forDatabase(database));
+    }
+
+    public void testDatabaseConnection() {
+        try (Session session = driver.session()) {
+            session.writeTransaction(tx ->tx.run("CREATE (c:Country {name:\"Bulgaria\"})"));
+        }
+
+    }*/
+
+    public void testDatabaseConnection() {
+        City city = new City();
+        city.setId(1);
+        city.setName("Ungaria");
+        city.setLongitude(32);
+        city.setLatitude(52);
+
+        AbstractRepository abstractRepository = new AbstractRepository();
+        abstractRepository.create(city);
+    }
+
+
+    /*public static void main(String[] args) {
+
+
     /*    Driver driver = GraphDatabase.driver("bolt://localhost:7687",
                 AuthTokens.basic("neo4j", "student"));
 
@@ -48,33 +80,40 @@ public class InsertData {
             e.printStackTrace();
         }
         driver.close();*/
-     //   Config noSSL = Config.build().withEncryptionLevel(Config.EncryptionLevel.NONE).toConfig();
-        try (Connection con = DriverManager.getConnection("jdbc:neo4j:bolt://localhost", "neo4j", "student")) {
+    //   Config noSSL = Config.build().withEncryptionLevel(Config.EncryptionLevel.NONE).toConfig();
+      /*  try(
+    Connection con = DriverManager.getConnection("jdbc:neo4j:bolt://localhost", "neo4j", "student"))
 
-            // Querying
-            String query = "CALL apoc.import.json(\\\"\"+f.toURI()+\"\\\")\\n\"+\n" +
-                    "                            \"YIELD value\\n\" +\n" +
-                    "                            \"MERGE (c:Country {name: value.name })\\n\" +\n" +
-                    "                            \"WITH c, value\\n\" +\n" +
-                    "                            \"FOREACH(state in value.states |\\n\" +\n" +
-                    "                            \"MERGE (s:State {name:state.name})\\n\" +\n" +
-                    "                            \"MERGE (s)-[:STATE_OF]->(c)\\n\" +\n" +
-                    "                            \"FOREACH(city in state.cities |\\n\" +\n" +
-                    "                            \"MERGE(d:City {name:city.name})\\n\" +\n" +
-                    "                            \"MERGE (d)-[:CITY_OF]->(s)))";
-            try (PreparedStatement stmt = con.prepareStatement(query)) {
-               // stmt.setString(1,"John");
+    {
 
-                try (ResultSet rs = stmt.executeQuery()) {
-                    while (rs.next()) {
-                        System.out.println("Friend: "+rs.getString("f.name")+" is "+rs.getInt("f.age"));
-                    }
+        // Querying
+        String query = "CALL apoc.import.json(\\\"\"+f.toURI()+\"\\\")\\n\"+\n" +
+                "                            \"YIELD value\\n\" +\n" +
+                "                            \"MERGE (c:Country {name: value.name })\\n\" +\n" +
+                "                            \"WITH c, value\\n\" +\n" +
+                "                            \"FOREACH(state in value.states |\\n\" +\n" +
+                "                            \"MERGE (s:State {name:state.name})\\n\" +\n" +
+                "                            \"MERGE (s)-[:STATE_OF]->(c)\\n\" +\n" +
+                "                            \"FOREACH(city in state.cities |\\n\" +\n" +
+                "                            \"MERGE(d:City {name:city.name})\\n\" +\n" +
+                "                            \"MERGE (d)-[:CITY_OF]->(s)))";
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
+            // stmt.setString(1,"John");
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    System.out.println("Friend: " + rs.getString("f.name") + " is " + rs.getInt("f.age"));
                 }
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    } catch(
+    SQLException throwables)
+
+    {
+        throwables.printStackTrace();
     }
+   }*/
 }
+
