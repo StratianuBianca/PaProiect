@@ -4,7 +4,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 public class EntityManagerProvider {
-    private static EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("primary");
+    private static EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("Proiect");
 
     private  static final EntityManagerProvider singleton = new EntityManagerProvider();
     private EntityManagerProvider() {}
