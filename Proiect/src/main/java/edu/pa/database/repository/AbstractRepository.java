@@ -1,17 +1,9 @@
 package edu.pa.database.repository;
 
+import edu.pa.database.resource.DriverManager;
 
-import edu.pa.database.entityController.EntityManagerProvider;
-import edu.pa.database.model.City;
-
-import javax.persistence.EntityManager;
-
-public class AbstractRepository {
-    protected final EntityManager entityManager = EntityManagerProvider.getEntityManagerFactory().createEntityManager();
-
-    public void create (City item){
-        entityManager.getTransaction().begin();
-        entityManager.persist(item);
-        entityManager.getTransaction().commit();
-    }
+public abstract class AbstractRepository<T> {
+   protected final DriverManager driverManager = new DriverManager();
+   abstract public boolean save (T item);
+   abstract public T findByName (String name);
 }

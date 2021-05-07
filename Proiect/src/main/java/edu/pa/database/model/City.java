@@ -1,41 +1,33 @@
 package edu.pa.database.model;
 
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import org.springframework.data.neo4j.core.schema.Id;
+import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Property;
+import org.springframework.data.neo4j.core.schema.Relationship;
 
-@Entity
+@Node("City")
 public class City {
-    private int id;
+    private @Id int id;
+
+    @Property("name")
     private String name;
-    private long latitude;
-    private long longitude;
 
-    public City() {
-    }
+    @Relationship(type="CITY_OF")
+    String county;
 
-    @Basic
-    @Column
-    public long getLongitude() {
-        return longitude;
-    }
-    public void setLongitude(long longitude) {
-        this.longitude = longitude;
+    public City(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
-    @Basic
-    @Column
-    public long getLatitude() {
-        return latitude;
-    }
-    public void setLatitude(long latitude) {
-        this.latitude = latitude;
+    public City(int id, String name, String county) {
+        this.id = id;
+        this.name = name;
+        this.county = county;
     }
 
-    @Basic
-    @Column
+    //Getters & Setters
     public String getName() {
         return name;
     }
@@ -43,12 +35,22 @@ public class City {
         this.name = name;
     }
 
-    @Id
-    @Column
     public int getId() {
         return id;
     }
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getCounty() { return county; }
+    public void setCounty(String county) { this.county = county; }
+
+    //Override
+
+    @Override
+    public String toString() {
+        return "City " +
+                "id: " + id +
+                ", name: " + name ;
     }
 }
