@@ -23,7 +23,10 @@ public class CountryRepository extends AbstractRepository<Country>{
     public Country findByName(String name) {
         try(Session session = driverManager.getSession()) {
             List<Record> records = session.readTransaction(tx -> tx.run("MATCH (c:Country) WHERE c.name = $name RETURN c.id", parameters("name", name)).list());
-            return new Country(records.get(0).get("s.id").asInt(), name);
+            if(!records.isEmpty())
+                return new Country(records.get(0).get("c.id").asInt(), name);
+            else
+                return null;
         }catch (Exception e){
             e.printStackTrace();
             return null;}

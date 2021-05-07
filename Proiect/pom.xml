@@ -43,11 +43,6 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.hibernate.ogm</groupId>
-            <artifactId>hibernate-ogm-neo4j</artifactId>
-            <version>5.4.1.Final</version>
-        </dependency>
 
         <dependency>
             <groupId>org.neo4j</groupId>
@@ -55,19 +50,6 @@
             <version>3.2.19</version>
             <scope>runtime</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.neo4j.driver</groupId>
-            <artifactId>neo4j-java-driver</artifactId>
-            <version>4.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-jdbc-driver</artifactId>
-            <version>4.0.1</version>
-            <scope>runtime</scope>
-        </dependency>
-
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

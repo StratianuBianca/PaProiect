@@ -16,8 +16,8 @@ public class CityRepository extends AbstractRepository<City>{
             session.writeTransaction(tx -> tx.run("MATCH " +
                     "(a:City), " +
                     "(b:County) " +
-                    "WHERE a.name= $cityName AND b.name= $county " +
-                    "CREATE (a)-[r:CITY_OF]->(b) ", parameters("cityName", item.getName(), "county", item.getCounty())));
+                    "WHERE a.name= $cityName AND a.id= $cityId AND b.name= $county " +
+                    "CREATE (a)-[r:CITY_OF]->(b) ", parameters("cityName", item.getName(),"cityId", item.getId(), "county", item.getCounty())));
             return true;
         }catch (Exception e){
             e.printStackTrace();
@@ -28,7 +28,9 @@ public class CityRepository extends AbstractRepository<City>{
     public City findByName(String name) {
         try(Session session = driverManager.getSession()) {
             List<Record> records = session.readTransaction(tx -> tx.run("MATCH (c:City) WHERE c.name = $name RETURN c.id", parameters("name", name)).list());
+            if(!records.isEmpty())
             return new City(records.get(0).get("c.id").asInt(), name);
+            else return null;
         }catch (Exception e){
             e.printStackTrace();
             return null;}

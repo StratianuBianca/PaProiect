@@ -29,7 +29,10 @@ public class CountyRepository extends AbstractRepository<County>{
     public County findByName(String name) {
         try(Session session = driverManager.getSession()) {
             List<Record> records = session.readTransaction(tx -> tx.run("MATCH (c:County) WHERE c.name = $name RETURN c.id", parameters("name", name)).list());
+          if(!records.isEmpty())
             return new County(records.get(0).get("c.id").asInt(), name);
+          else
+              return null;
         }catch (Exception e){
             e.printStackTrace();
             return null;}

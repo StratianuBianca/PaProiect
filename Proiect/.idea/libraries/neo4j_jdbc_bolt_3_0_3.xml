@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="neo4j-jdbc-bolt-3.0.3">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/neo4j-jdbc-bolt-3.0.3.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
