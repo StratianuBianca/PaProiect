@@ -1,5 +1,6 @@
 package edu.pa.database.repository;
 
+import edu.pa.database.model.City;
 import edu.pa.database.model.County;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Session;
@@ -36,5 +37,9 @@ public class CountyRepository extends AbstractRepository<County>{
         }catch (Exception e){
             e.printStackTrace();
             return null;}
+    }
+
+    public City getCountyCapital(String name){
+        return null;
     }
 }

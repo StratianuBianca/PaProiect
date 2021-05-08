@@ -64,7 +64,10 @@ public class InputParse {
         if(isValid(address.getCounty())) checkExistence(makeStandard(address.getCounty()),InputType.COUNTY);
         if(isValid(address.getPostalCode())) checkExistence(makeStandard(address.getPostalCode()),InputType.OTHERS);
         if(isValid(address.getStreetAddress())) checkExistence(makeStandard(address.getStreetAddress()), InputType.OTHERS);
-        System.out.println(parsedInput);
+    }
+
+    public ParsedInput getParsedInput() {
+        return parsedInput;
     }
 }
 
