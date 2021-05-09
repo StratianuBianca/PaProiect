@@ -4,17 +4,22 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.SessionScope;
 
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
+@Component
+@SessionScope
 public class Address {
     private String country;
     private String county;
     private String city;
     private String postalCode;
     private String streetAddress;
+    private String correctAddress;
 
     public Address() { }
 
@@ -56,6 +61,14 @@ public class Address {
 
     public String getCountry() {
         return country;
+    }
+
+    public void setCorrectAddress(String correctAddress) {
+        this.correctAddress = correctAddress;
+    }
+
+    public String getCorrectAddress() {
+        return correctAddress;
     }
 }
 
