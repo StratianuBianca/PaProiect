@@ -10,7 +10,7 @@ public class CorrectAddressServiceImpl implements CorrectAddressService{
         FinalAddress finalAddress = new FinalAddress();
         Address correctAddress = finalAddress.correctAddress(address);
         //checking
-        
+
        return "response";
     }
 }

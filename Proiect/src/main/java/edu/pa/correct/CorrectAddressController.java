@@ -38,7 +38,6 @@ public class CorrectAddressController {
         } catch (IllegalStateException exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.FORBIDDEN);
         }
-      //  return "response";
         this.address.setCorrectAddress(response);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
