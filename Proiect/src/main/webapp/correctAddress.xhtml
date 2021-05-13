@@ -37,20 +37,27 @@
 
             <div class="form-group">
                 <label for="country">Country:</label>
-                <h:inputText id="country" styleClass="form-control" readonly = "false" />
+                <h:inputText id="country" styleClass="form-control" readonly = "false"  value="#{address.country}" />
             </div>
 
 
             <div class="form-group">
                 <label for="county">County:</label>
-                <h:inputText id="county" styleClass="form-control" readonly = "false" />
+                <h:inputText id="county" styleClass="form-control" readonly = "false" value="#{address.county}" />
             </div>
 
             <div class="form-group">
                 <label for="city">City:</label>
-                <h:inputText id="city" styleClass="form-control" readonly = "false"  />
+                <h:inputText id="city" styleClass="form-control" readonly = "false" value="#{address.city}" />
             </div>
-
+            <div class="form-group">
+                <label for="postalCode">Postal Code:</label>
+                <h:inputText id="postalCode" styleClass="form-control" readonly = "false" value="#{address.postalCode}" />
+            </div>
+            <div class="form-group">
+                <label for="streetAddress">Street Address:</label>
+                <h:inputText id="streetAddress" styleClass="form-control" readonly = "false"  value="#{address.streetAddress}" />
+            </div>
             <h:commandButton type="submit" value="Resolve address" styleClass="btn btn-primary" action="#{correctController.correct}" />
 
         </h:form>
