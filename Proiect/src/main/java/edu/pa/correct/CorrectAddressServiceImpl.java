@@ -9,8 +9,7 @@ public class CorrectAddressServiceImpl implements CorrectAddressService{
     public String correct(Address address) {
         FinalAddress finalAddress = new FinalAddress();
         Address correctAddress = finalAddress.correctAddress(address);
-        //checking
-        
-       return "response";
+        if(address.equalAddress(correctAddress)) return "Correct Address: \n" + address;
+        return "Bad address: \n" + address + "\n" + "Correct Address: \n" + correctAddress;
     }
 }

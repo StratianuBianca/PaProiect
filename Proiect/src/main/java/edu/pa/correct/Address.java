@@ -70,5 +70,13 @@ public class Address {
     public String getCorrectAddress() {
         return correctAddress;
     }
+
+    boolean equalAddress(Address address){
+        if(!address.getCountry().equals(this.getCountry())) return false;
+        if(!address.getCounty().equals(this.getCounty())) return false;
+        return address.getCity().equals(this.getCity());
+
+    }
+
 }
 

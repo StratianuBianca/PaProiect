@@ -97,6 +97,12 @@
             <artifactId>rewrite-integration-faces</artifactId>
             <version>3.4.1.Final</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20140107</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -3,6 +3,7 @@ package edu.pa.database.finaladdress;
 import edu.pa.correct.Address;
 import edu.pa.database.model.AddressEntity;
 import edu.pa.database.model.City;
+import edu.pa.database.model.County;
 import edu.pa.database.repository.AddressRepository;
 import edu.pa.database.repository.CityRepository;
 import edu.pa.database.repository.CountyRepository;
@@ -11,11 +12,48 @@ import inputparsing.ParsedInput;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 public class FinalAddress {
     CityRepository cityRepository = new CityRepository();
     CountyRepository countyRepository = new CountyRepository();
     AddressRepository addressRepository = new AddressRepository();
+
+    Map<Address, Integer> addressIntegerMap = new HashMap<>();
+
+    public Address correctAddress(Address address) {
+        InputParse inputParse = new InputParse(address);
+        ParsedInput parsedInput = checkParsedInput(inputParse.getParsedInput());
+        return bestAddress(parsedInput);
+    }
+
+    //fill empty places of input based on existing locations
+    ParsedInput checkParsedInput(ParsedInput parsedInput) {
+        Map<String, Integer> map = new HashMap<>();
+        if (parsedInput.getCountries().isEmpty()) {
+            map.put("Romania", 20);
+            parsedInput.setCountries(map);
+        }
+        if (parsedInput.getCities().isEmpty() && parsedInput.getCounties().isEmpty()) {
+            map.put("Bucuresti", 20);
+            parsedInput.setCities(map);
+            parsedInput.setCounties(map);
+        } else if (parsedInput.getCounties().isEmpty()) {
+            for (Map.Entry<String, Integer> city : parsedInput.getCities().entrySet()) {
+                City cityEntry = cityRepository.findByName(city.getKey());
+                map.put(cityEntry.getCounty(), city.getValue());
+            }
+            parsedInput.setCounties(map);
+        } else {
+            for (Map.Entry<String, Integer> county : parsedInput.getCounties().entrySet()) {
+                County countyRe = countyRepository.findByName(county.getKey());
+                map.put(countyRe.getCountyCapital(), county.getValue());
+            }
+            parsedInput.setCities(map);
+        }
+
+        return parsedInput;
+    }
 
     //get input, parse it, make test, return final address based on a score
     /*
@@ -37,84 +75,99 @@ public class FinalAddress {
      *                                    => exista : inlocuiesc judetul
      *                                    => nu exista: pun resedinta de judet
      *              ( inseamna ca legatura judet-localitate nu exista, este inlocuit judetul cu judetul localitatii,
-     *                in ideea in care e mai putin probabil sa gresesti localitatea decat judetul)   */
+     *                in ideea in care e mai putin probabil sa gresesti localitatea decat judetul)
+     *
+     * Map adrese -> scor
+     * */
 
 
-    Address checkCountryConnections(ParsedInput parsedInput) {
+    private Address bestAddress(ParsedInput parsedInput) {
+
         Address address = new Address();
-        for (Map.Entry<String, Integer> country : parsedInput.getCountries().entrySet()) {
-            boolean countyValue = parsedInput.getCounties().containsValue(20);
-            address = checkCountyConnection(countyValue, parsedInput, country.getKey());
+        checkCountryConnections(parsedInput);
+        boolean set70 = false;
+        boolean set100 = false;
+         if (addressIntegerMap.containsValue(70))  set70 = true;
+        if (addressIntegerMap.containsValue(100))  set100 = true;
+        for (Map.Entry<Address, Integer> addressIntegerEntry: addressIntegerMap.entrySet()) {
+              if(addressIntegerEntry.getValue().equals(100))    return addressIntegerEntry.getKey();
+              if(!set100 && set70 && addressIntegerEntry.getValue().equals(70)) return addressIntegerEntry.getKey();
+              if(!set70 && !set100) return addressIntegerEntry.getKey();
         }
+
         return address;
     }
 
-   private Address checkCountyConnection (boolean countyValue, ParsedInput parsedInput, String country){
-       boolean cityValue = parsedInput.getCities().containsValue(20);
-       if(countyValue) {
-           for (Map.Entry<String, Integer> county : parsedInput.getCounties().entrySet()) {
-               if(county.getValue()==20) return checkCityConnections(cityValue, parsedInput, country, county.getKey());
-           }
-       }
-       else
-           for (Map.Entry<String, Integer> county : parsedInput.getCounties().entrySet())
-                return checkCityConnections(cityValue, parsedInput, country, county.getKey());
-           return null;
+    private void checkCountryConnections(ParsedInput parsedInput) {
+        for (Map.Entry<String, Integer> country : parsedInput.getCountries().entrySet()) {
+            boolean countyValue = parsedInput.getCounties().containsValue(20);
+            checkCountyConnection(countyValue, parsedInput, country.getKey());
+        }
     }
 
-    private Address checkCityConnections(boolean cityValue, ParsedInput parsedInput, String country, String county) {
+    private void checkCountyConnection(boolean countyValue, ParsedInput parsedInput, String country) {
+        boolean cityValue = parsedInput.getCities().containsValue(20);
+        if (countyValue) {
+            for (Map.Entry<String, Integer> county : parsedInput.getCounties().entrySet()) {
+                if (county.getValue() == 20) checkCityConnections(cityValue, parsedInput, country, county.getKey());
+            }
+        } else
+            for (Map.Entry<String, Integer> county : parsedInput.getCounties().entrySet())
+                checkCityConnections(cityValue, parsedInput, country, county.getKey());
+    }
+
+    private void checkCityConnections(boolean cityValue, ParsedInput parsedInput, String country, String county) {
         if (cityValue) {
             for (Map.Entry<String, Integer> city : parsedInput.getCities().entrySet()) {
-                if (city.getValue() == 20) return checkConnections(country, county, city.getKey());
+                if (city.getValue() == 20) checkConnections(country, county, city.getKey());
             }
         } else
             for (Map.Entry<String, Integer> city : parsedInput.getCities().entrySet()) {
-                return checkConnections(country, county, city.getKey());
+                checkConnections(country, county, city.getKey());
             }
-
-            return null;
     }
 
-    Address checkConnections(String country, String county, String city){
-    Address address = new Address();
-    if (addressRepository.fullAddress(new AddressEntity(country, county, city))) {
+    /* -- legatura tara - judet
+     *            ->  nu exista => legatura tara - localitate -> se corecteaza luand judetul de care apartine localitatea
+     *               (caz putin probabil, ar insemna ca judetul nu e judet, deci ar fi gol in parsedInput de judet, dar care e completat deja)
+     *            ->  exista => verific legatura tara - localitate (ma asigur ca exista localitatea)
+     *                                    => exista : inlocuiesc judetul - daca nu e acelasi
+     *                                    => nu exista: pun resedinta de judet
+     *              ( inseamna ca legatura judet-localitate nu exista, este inlocuit judetul cu judetul localitatii,
+     *                in ideea in care e mai putin probabil sa gresesti localitatea decat judetul)
+     */
+
+    void checkConnections(String country, String county, String city) {
+        Address address = new Address();
         address.setCountry(country);
         address.setCounty(county);
         address.setCity(city);
+        AddressEntity addressEntity = new AddressEntity(country, county, city);
+        if (addressRepository.fullAddress(addressEntity)) {
+            addressIntegerMap.put(address, 100);
+            return;
         }
-        return address;
-    }
 
-    public Address correctAddress(Address address) {
-        InputParse inputParse = new InputParse(address);
-        ParsedInput parsedInput = checkParsedInput(inputParse.getParsedInput());
-        return checkCountryConnections(parsedInput);
-    }
-
-    ParsedInput checkParsedInput(ParsedInput parsedInput) {
-        Map<String, Integer> map = new HashMap<>();
-        if (parsedInput.getCountries().isEmpty()) {
-            map.put("Romania", 20);
-            parsedInput.setCountries(map);
-        }
-        if (parsedInput.getCities().isEmpty() && parsedInput.getCounties().isEmpty()) {
-            map.put("Bucuresti", 20);
-            parsedInput.setCities(map);
-            parsedInput.setCounties(map);
-        } else if (parsedInput.getCounties().isEmpty()) {
-            for (Map.Entry<String, Integer> city : parsedInput.getCities().entrySet()) {
-                City cityEntry = cityRepository.findByName(city.getKey());
-                map.put(cityEntry.getCounty(), city.getValue());
-            }
-            parsedInput.setCounties(map);
+        List<String> counties = addressRepository.cityToCountry(addressEntity);
+        if (addressRepository.countyToCountry(addressEntity)) {
+            if (!counties.isEmpty()){
+                if (!counties.contains(county)) {
+                    address.setCounty(counties.get(0));
+                    addressIntegerMap.put(address, 70);
+                } }else {
+                    County countyCapital = countyRepository.findByName(county);
+                    address.setCity(countyCapital.getCountyCapital());
+                    addressIntegerMap.put(address, 70);
+                }
+        } else if (!counties.isEmpty()) {
+            address.setCounty(counties.get(0));
+            addressIntegerMap.put(address, 70);
         } else {
-            for (Map.Entry<String, Integer> county : parsedInput.getCounties().entrySet()) {
-                City countyCapital = countyRepository.getCountyCapital(county.getKey());
-                map.put(countyCapital.getName(), county.getValue());
-            }
-            parsedInput.setCities(map);
+            address.setCounty("Bucuresti");
+            address.setCity("Bucuresti");
+            addressIntegerMap.put(address, 40);
         }
 
-        return parsedInput;
     }
+
 }

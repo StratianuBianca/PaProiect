@@ -4,6 +4,7 @@ import edu.pa.database.model.AddressEntity;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Session;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.neo4j.driver.Values.parameters;
@@ -45,6 +46,22 @@ public class AddressRepository extends AbstractRepository<AddressEntity>{
         }catch (Exception e){
             e.printStackTrace();
             return false;}
+    }
+    public List<String> cityToCountry (AddressEntity address){
+        List<String> counties = new ArrayList<>();
+        try(Session session = driverManager.getSession()) {
+            List<Record> records = session.readTransaction(tx -> tx.run("Match (b:Country), (c:City), (a:County) WHERE " +
+                    " b.name= $countryName AND c.name= $cityName AND (c)-[:CITY_OF]->(a) And (a)-[:COUNTY_OF]->(b) " +
+                   " RETURN a.name" , parameters("countryName", address.getCountry(),
+                    "cityName", address.getCity())).list());
+            for(Record record : records){
+                counties.add(record.get("a.name").asString());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            }
+        return counties;
+
     }
 
 

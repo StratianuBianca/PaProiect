@@ -22,20 +22,20 @@ public class DatabaseInitialization {
         CityRepository cityRepository = new CityRepository();
 
         try{
-            FileReader reader = new FileReader("src/main/java/edu/pa/database/initialization/Romania.json");
+            FileReader reader = new FileReader("src/main/java/edu/pa/database/initialization/RomaniaFinal.json");
 
             JSONParser jsonParser = new JSONParser();
             JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
 
-            countryRepository.save(new Country((int) jsonObject.get("id"),(String) jsonObject.get("name")));
-            JSONArray array = (JSONArray) jsonObject.get("states");
+            countryRepository.save(new Country(Integer.parseInt( (String) jsonObject.get("id")),(String) jsonObject.get("nume")));
+            JSONArray array = (JSONArray) jsonObject.get("judete");
             for (Object county: array){
                 JSONObject countyObj = (JSONObject) county;
-                countyRepository.save(new County((int) countyObj.get("id"), (String) countyObj.get("name"), (String) jsonObject.get("name")));
-                JSONArray cityArray = (JSONArray) countyObj.get("cities");
+                countyRepository.save(new County(Integer.parseInt( (String) countyObj.get("id")), (String) countyObj.get("nume"), (String) jsonObject.get("nume"), (String) countyObj.get("resedinta")));
+                JSONArray cityArray = (JSONArray) countyObj.get("localitati");
                 for(Object city: cityArray){
                     JSONObject cityObj = (JSONObject) city;
-                    cityRepository.save(new City((int) cityObj.get("id"), (String) cityObj.get("name"), (String) countyObj.get("name")));
+                    cityRepository.save(new City( Integer.parseInt( (String) cityObj.get("id")), (String) cityObj.get("nume"), (String) countyObj.get("nume")));
                 }
             }
         } catch (FileNotFoundException | ParseException fileNotFoundException) {

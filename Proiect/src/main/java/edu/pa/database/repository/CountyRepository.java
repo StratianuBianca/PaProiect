@@ -13,7 +13,7 @@ public class CountyRepository extends AbstractRepository<County>{
     @Override
     public boolean save(County item) {
         try(Session session = driverManager.getSession()) {
-            session.writeTransaction(tx -> tx.run("CREATE (c:County {name:$name, id:$id})", parameters("name", item.getName(), "id", item.getId()) ));
+            session.writeTransaction(tx -> tx.run("CREATE (c:County {name:$name, id:$id, countyCapital: $countyCapital})", parameters("name", item.getName(), "id", item.getId(), "countyCapital", item.getCountyCapital()) ));
             session.writeTransaction(tx -> tx.run("MATCH " +
                     "  (a:County),"+
                     "  (b:Country) " +
@@ -39,7 +39,4 @@ public class CountyRepository extends AbstractRepository<County>{
             return null;}
     }
 
-    public City getCountyCapital(String name){
-        return null;
-    }
 }
