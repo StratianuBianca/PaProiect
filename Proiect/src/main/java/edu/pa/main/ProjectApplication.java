@@ -1,21 +1,17 @@
 package edu.pa.main;
 
-import edu.pa.correct.*;
-import org.ocpsoft.rewrite.servlet.RewriteFilter;
+import edu.pa.correct.CorrectAddressController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 import javax.faces.webapp.FacesServlet;
-import javax.servlet.DispatcherType;
 import javax.servlet.ServletContext;
 import java.util.Arrays;
-import java.util.EnumSet;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class })
 @ComponentScan(basePackageClasses = CorrectAddressController.class)

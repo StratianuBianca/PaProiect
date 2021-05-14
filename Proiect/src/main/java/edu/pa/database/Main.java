@@ -10,11 +10,11 @@ import inputparsing.InputParse;
 public class Main {
     public static void main(String[] args) {
         Address address = new Address();
-        address.setCountry("Romania");
-        address.setCounty("Satu Mare");
-        address.setCity("Satu Mare");
-        InputParse inputParse = new InputParse(address);
-        System.out.println(inputParse.getParsedInput());
-        //DatabaseInitialization.databaseInitialization();
+      //  address.setCountry("Romania");
+        //address.setCounty("Satu Mare");
+        //address.setCity("Satu Mare");
+        //InputParse inputParse = new InputParse(address);
+        //System.out.println(inputParse.getParsedInput());
+        DatabaseInitialization.databaseInitialization();
     }
 }

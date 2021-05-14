@@ -1,11 +1,10 @@
 package inputparsing;
 
-import edu.pa.correct.*;
+import edu.pa.correct.Address;
 import edu.pa.database.repository.AddressRepository;
 import edu.pa.database.repository.CityRepository;
 import edu.pa.database.repository.CountryRepository;
 import edu.pa.database.repository.CountyRepository;
-
 
 import java.text.Normalizer;
 import java.util.*;
