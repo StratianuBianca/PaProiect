@@ -15,10 +15,14 @@ public class Country {
     @Property("name")
     private String name;
 
+    @Property("capital")
+    private String capital;
 
-    public Country(int id, String name) {
+
+    public Country(int id, String name, String capital) {
         this.id = id;
         this.name = name;
+        this.capital = capital;
     }
 
     //Getters & Setters
@@ -27,6 +31,9 @@ public class Country {
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+
+    public String getCapital() { return capital; }
+    public void setCapital(String capital) { this.capital = capital; }
 
     //Override
 

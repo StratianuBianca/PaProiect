@@ -27,11 +27,20 @@ public class InputParse {
         return 0;
     }
 
+    static String capitalLetters (String word){
+        String newWord;
+        newWord = Arrays.stream(word.split("-"))
+                .map(wordUp -> wordUp.substring(0, 1).toUpperCase(Locale.ROOT) + wordUp.substring(1).toLowerCase(Locale.ROOT)+ "-")
+                .collect(Collectors.joining());
+        newWord = newWord.substring(0, newWord.length() - 1);
+        return newWord;
+    }
+
     //eliminate words which contains a dot, numbers, replace diacritics, eliminate comma
     static List<String> makeStandard(String input) {
         return Arrays.stream(input.split(" "))
                 .map(word -> word.replaceAll(",", ""))
-                .map(word -> word.substring(0, 1).toUpperCase(Locale.ROOT) + word.substring(1).toLowerCase(Locale.ROOT))
+                .map(InputParse::capitalLetters)
                 .map(word -> Normalizer.normalize(word, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", ""))
                 .filter(word -> !word.contains("."))
                 .filter(word -> !word.matches(".*[0-9].*"))
@@ -49,15 +58,18 @@ public class InputParse {
             for (String token : tokens) {
                 boolean isAdded = false;
                 if (cityRepository.findByName(token) != null) {
-                    parsedInput.cities.put(token, patternScore(inputType, InputType.CITY));
+                    if(!parsedInput.cities.containsKey(token))
+                               parsedInput.cities.put(token, patternScore(inputType, InputType.CITY));
                     isAdded = true;
                 }
                 if (countryRepository.findByName(token) != null) {
-                    parsedInput.countries.put(token, patternScore(inputType, InputType.COUNTRY));
+                    if(!parsedInput.countries.containsKey(token))
+                        parsedInput.countries.put(token, patternScore(inputType, InputType.COUNTRY));
                     isAdded = true;
                 }
                 if (countyRepository.findByName(token) != null) {
-                    parsedInput.counties.put(token, patternScore(inputType, InputType.COUNTY));
+                    if(!parsedInput.counties.containsKey(token))
+                        parsedInput.counties.put(token, patternScore(inputType, InputType.COUNTY));
                     isAdded = true;
                 }
                 if (!isAdded) possibleNewTokens.add(token);

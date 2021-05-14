@@ -35,4 +35,16 @@ public class CityRepository extends AbstractRepository<City>{
             e.printStackTrace();
             return null;}
     }
+    public String getCountry(String cityName){
+        String country ="";
+        try(Session session = driverManager.getSession()) {
+            List<Record> records = session.readTransaction(tx -> tx.run("Match (c:City), (b:Country) Where c.name= $cityName "+
+                    "AND (c)-[:CITY_OF]->()-[:COUNTY_OF]->(b) Return b.name" , parameters("cityName", cityName)).list());
+            country = records.get(0).get("b.name").asString();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return country;
+    }
 }
