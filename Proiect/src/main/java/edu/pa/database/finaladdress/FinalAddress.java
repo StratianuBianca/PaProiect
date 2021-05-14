@@ -22,36 +22,49 @@ public class FinalAddress {
     Map<Address, Integer> addressIntegerMap = new HashMap<>();
 
     public Address correctAddress(Address address) {
+        System.out.println("Addresa primita: " + address);
         InputParse inputParse = new InputParse(address);
         ParsedInput parsedInput = checkParsedInput(inputParse.getParsedInput());
+
         return bestAddress(parsedInput);
     }
 
     //fill empty places of input based on existing locations
     ParsedInput checkParsedInput(ParsedInput parsedInput) {
-        Map<String, Integer> map = new HashMap<>();
+        System.out.println("Parsed input to be checked: " + parsedInput);
         if (parsedInput.getCountries().isEmpty()) {
+            Map<String, Integer> map = new HashMap<>();
             map.put("Romania", 20);
             parsedInput.setCountries(map);
+            System.out.println("empty country");
         }
         if (parsedInput.getCities().isEmpty() && parsedInput.getCounties().isEmpty()) {
+            Map<String, Integer> map = new HashMap<>();
             map.put("Bucuresti", 20);
-            parsedInput.setCities(map);
             parsedInput.setCounties(map);
+            Map<String, Integer> map1 = new HashMap<>();
+            map1.put("Sector 1",20);
+            parsedInput.setCities(map1);
+            System.out.println("empty county and city");
         } else if (parsedInput.getCounties().isEmpty()) {
+            Map<String, Integer> map = new HashMap<>();
             for (Map.Entry<String, Integer> city : parsedInput.getCities().entrySet()) {
                 City cityEntry = cityRepository.findByName(city.getKey());
                 map.put(cityEntry.getCounty(), city.getValue());
             }
+            System.out.println("empty county");
             parsedInput.setCounties(map);
-        } else {
+        } else if(parsedInput.getCities().isEmpty()) {
+            Map<String, Integer> map = new HashMap<>();
             for (Map.Entry<String, Integer> county : parsedInput.getCounties().entrySet()) {
                 County countyRe = countyRepository.findByName(county.getKey());
                 map.put(countyRe.getCountyCapital(), county.getValue());
             }
+            System.out.println("empty city");
             parsedInput.setCities(map);
         }
 
+        System.out.println("Checked input: " + parsedInput);
         return parsedInput;
     }
 
@@ -85,6 +98,8 @@ public class FinalAddress {
 
         Address address = new Address();
         checkCountryConnections(parsedInput);
+
+        System.out.println("Map of addresses:" + addressIntegerMap);
         boolean set70 = false;
         boolean set100 = false;
          if (addressIntegerMap.containsValue(70))  set70 = true;
@@ -142,7 +157,8 @@ public class FinalAddress {
         address.setCountry(country);
         address.setCounty(county);
         address.setCity(city);
-        AddressEntity addressEntity = new AddressEntity(country, county, city);
+        System.out.println("Address to be tested: " +address);
+        AddressEntity addressEntity = new AddressEntity(city, county, country);
         if (addressRepository.fullAddress(addressEntity)) {
             addressIntegerMap.put(address, 100);
             return;
@@ -162,7 +178,7 @@ public class FinalAddress {
         } else if (!counties.isEmpty()) {
             address.setCounty(counties.get(0));
             addressIntegerMap.put(address, 70);
-        } else {
+        } else if(counties.isEmpty() && city.isEmpty()) {
             address.setCounty("Bucuresti");
             address.setCity("Bucuresti");
             addressIntegerMap.put(address, 40);

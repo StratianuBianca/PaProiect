@@ -64,6 +64,19 @@ public class AddressRepository extends AbstractRepository<AddressEntity>{
 
     }
 
+    public List <String> nameLike(String possibleCity){
+        List<String> names = new ArrayList<>();
+        try(Session session = driverManager.getSession()) {
+            List<Record> records = session.readTransaction(tx -> tx.run("Match (c) WHERE c.name =~ '.*" + possibleCity + ".*' Return c.name").list());
+            for(Record record : records){
+                names.add(record.get("c.name").asString());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return names;
+    }
+
 
 
     @Override
