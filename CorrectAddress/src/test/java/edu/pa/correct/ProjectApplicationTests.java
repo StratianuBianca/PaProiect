@@ -1,10 +1,10 @@
-package edu.pa.main;
+package edu.pa.correct;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CorrectAddressTests {
+class ProjectApplicationTests {
 
     @Test
     void contextLoads() {
