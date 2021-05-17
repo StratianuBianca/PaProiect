@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+//Initialize the database with data from jsons using the same pattern
 public class DatabaseInitialization {
 
     static public void databaseInitialization() {

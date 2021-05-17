@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
+
+// Checks if there are connections between the locations given by the user
+// or replace them in order to form a valid address
 public class FinalAddress {
     CityRepository cityRepository = new CityRepository();
     CountyRepository countyRepository = new CountyRepository();
@@ -24,7 +27,6 @@ public class FinalAddress {
     Map<Address, Integer> addressIntegerMap = new HashMap<>();
 
     public Address correctAddress(Address address) {
-        System.out.println("Addresa primita: " + address);
         InputParse inputParse = new InputParse(address);
         ParsedInput parsedInput = checkParsedInput(inputParse.getParsedInput());
 
@@ -33,7 +35,6 @@ public class FinalAddress {
 
     //fill empty places of input based on existing locations
     ParsedInput checkParsedInput(ParsedInput parsedInput) {
-        System.out.println("Parsed input to be checked: " + parsedInput);
         if (parsedInput.getCountries().isEmpty() && parsedInput.getCities().isEmpty() && parsedInput.getCounties().isEmpty()) {
             Map<String, Integer> map = new HashMap<>();
             map.put("Romania", 20);
@@ -82,7 +83,6 @@ public class FinalAddress {
                 if (!parsedInput.getCounties().isEmpty()) {
                     for (Map.Entry<String, Integer> county : parsedInput.getCounties().entrySet()) {
                         County county1 = countyRepository.findByName(county.getKey());
-                        System.out.println(county1.getName());
                         city = county1.getCountyCapital();
                     }
                 } else if (!parsedInput.getCountries().isEmpty()) {
@@ -94,16 +94,15 @@ public class FinalAddress {
                 parsedInput.setCities(map);
             }
         }
-        System.out.println("Checked input: " + parsedInput);
         return parsedInput;
+
     }
 
+    //evaluate all possible correct addresses and choose the one with the highest score
     private Address bestAddress(ParsedInput parsedInput) {
-
         Address address = new Address();
         checkCountryConnections(parsedInput);
 
-        System.out.println("Map of addresses:" + addressIntegerMap);
         boolean set70 = false;
         boolean set100 = false;
         if (addressIntegerMap.containsValue(70)) set70 = true;
@@ -116,6 +115,7 @@ public class FinalAddress {
 
         return address;
     }
+
 
     private void checkCountryConnections(ParsedInput parsedInput) {
         for (Map.Entry<String, Integer> country : parsedInput.getCountries().entrySet()) {
@@ -146,12 +146,13 @@ public class FinalAddress {
             }
     }
 
+    // Checks the connections between locations or replace them
+    // if don't match
     void checkConnections(String country, String county, String city) {
         Address address = new Address();
         address.setCountry(country);
         address.setCounty(county);
         address.setCity(city);
-        System.out.println("Address to be tested: " + address);
         AddressEntity addressEntity = new AddressEntity(city, county, country);
         if (addressRepository.fullAddress(addressEntity)) {
             addressIntegerMap.put(address, 100);

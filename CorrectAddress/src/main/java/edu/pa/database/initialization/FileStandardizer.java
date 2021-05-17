@@ -10,7 +10,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.Normalizer;
-
+//Class used to parse the input from different sources into the needed pattern
 public class FileStandardizer {
 
     public static void fileStandardizer (String path, String pathStandard){

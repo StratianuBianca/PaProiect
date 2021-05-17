@@ -2,6 +2,7 @@ package inputparsing;
 
 import java.util.Map;
 
+//describes the input which will be obtain from user input
 public class ParsedInput {
     Map<String,Integer> countries;
     Map<String,Integer> counties;

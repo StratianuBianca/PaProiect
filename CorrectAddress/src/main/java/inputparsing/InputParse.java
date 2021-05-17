@@ -11,8 +11,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 //Parsing and initial scoring, return a parsed input with score.
-// maybe another class with scoring
-// two words per name
 public class InputParse {
     private final CityRepository cityRepository = new CityRepository();
     private final CountryRepository countryRepository = new CountryRepository();
@@ -21,7 +19,7 @@ public class InputParse {
 
     private final ParsedInput parsedInput;
 
-    //when there is a match this
+    //when there is a match
     int patternScore(InputType inputType, InputType wordType) {
         if (inputType.equals(wordType)) return 20;
         return 0;
@@ -36,7 +34,7 @@ public class InputParse {
         return newWord;
     }
 
-    //eliminate words which contains a dot, numbers, replace diacritics, eliminate comma
+    //eliminate words which contains a dot, numbers, replace diacritics, eliminate comma, make every word lowercase, only the first one is uppercase
     static List<String> makeStandard(String input) {
         return Arrays.stream(input.split(" "))
                 .map(word -> word.replaceAll(",", ""))
@@ -52,6 +50,7 @@ public class InputParse {
     }
 
 
+    //checks if a list of tokens are actual locations from database
     List<String> checkExistence(List<String> tokens, InputType inputType) {
         List<String> possibleNewTokens = new ArrayList<>();
         if (tokens != null)
@@ -78,7 +77,7 @@ public class InputParse {
         return possibleNewTokens;
     }
 
-
+    //some locations have names formed of 2 ore more words
     void possibleNewTokens(List<String> tokens) {
         List<String> possibleNewTokens = new ArrayList<>();
         if (tokens != null) {
@@ -105,7 +104,7 @@ public class InputParse {
         return null;
     }
 
-    //check every field and get it to standard, score, and return the matchings
+    //check every field and get it to standard, score, and return the matches
     public InputParse(Address address) {
         parsedInput = new ParsedInput();
         parsedInput.countries = new HashMap<>();

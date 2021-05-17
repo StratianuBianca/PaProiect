@@ -2,6 +2,7 @@ package edu.pa.database.resource;
 
 import org.neo4j.driver.*;
 
+//Return valid sessions to the database
 public class DriverManager {
     private final DatabaseConfig databaseConfig = new DatabaseConfig();
 
