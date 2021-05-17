@@ -1,6 +1,4 @@
-FROM openjdk:11
-WORKDIR '/app'
-ADD target/correct.jar correct.jar
+FROM tomcat:latest
+ADD target/correct.war /usr/local/tomcat/webapps/
 EXPOSE 8091
-COPY . .
-ENTRYPOINT ["java", "-jar","correct.jar"]
+CMD ["catalina.sh", "run"]

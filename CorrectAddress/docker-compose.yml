@@ -1,42 +1,29 @@
-version: "3"
+version: '3.7'
+
 services:
-  neo4j:
-    image: neo4j:4.0.2
+  database:
+    image: neo4j
+    container_name: database
     environment:
-        NEO4J_AUTH: neo4j/student
-        NEO4J_kafka_bootstrap_servers: kafka:19092
-        NEO4J_dbms_logs_debug_level: DEBUG
+       NEO4J_AUTH: neo4j/student
+       ORG_NEO4J_DRIVER_URI: bolt://database:7687
     ports:
-        - 7687:7687
+      - 7687:7687
+      - 7474:7474
+
+  springapi:
+    image: correct-address
+    links:
+      - database
+    ports:
+      - 8091:8080
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:neo4j://database:7687/neo4j
+      SPRING_DATASOURCE_USERNAME: neo4j
+      SPRING_DATASOURCE_PASSWORD: student
+      SPRING_DATASOURCE_URI : bolt://localhost:7687
     depends_on:
-      - kafka
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    hostname: zookeeper
-    container_name: zookeeper
-    ports:
-      - "12181:12181"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 12181
-  kafka:
-    image: confluentinc/cp-kafka:latest
-    hostname: kafka
-    container_name: kafka
-    ports:
-      - "19092:19092"
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:12181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:19092
-  docker-springboot-example:
-      image: amiridokerid/docker-springboot-example:latest
-      ports:
-        - 8091:8091
-      restart: unless-stopped
-      build:
-        context: ./
-        dockerfile: Dockerfile
-      depends_on:
-        - neo4j
+      - database

@@ -173,9 +173,8 @@ public class FinalAddress {
         } else if (!counties.isEmpty()) {
             address.setCounty(counties.get(0));
             addressIntegerMap.put(address, 70);
-        } else if (counties.isEmpty() && city.isEmpty()) {
-            address.setCounty("Bucuresti");
-            address.setCity("Bucuresti");
+        } else {
+            address.setCountry(countyRepository.getCountry(address.getCounty()));
             addressIntegerMap.put(address, 40);
         }
 

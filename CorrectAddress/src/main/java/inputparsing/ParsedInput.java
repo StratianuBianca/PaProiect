@@ -16,6 +16,11 @@ public class ParsedInput {
     public Map<String, Integer> getCountries() { return countries; }
     public void setCountries(Map<String, Integer> countries) { this.countries = countries; }
 
+    public boolean equalParsedInput(ParsedInput parsedInput){
+        if(!parsedInput.cities.keySet().equals(cities.keySet())) return false;
+        if(!parsedInput.counties.keySet().equals(counties.keySet())) return false;
+        return parsedInput.countries.keySet().equals(countries.keySet());
+    }
     @Override
     public String toString() {
         return "ParsedInput{" +

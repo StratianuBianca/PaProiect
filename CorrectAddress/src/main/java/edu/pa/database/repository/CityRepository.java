@@ -27,9 +27,10 @@ public class CityRepository extends AbstractRepository<City>{
     @Override
     public City findByName(String name) {
         try(Session session = driverManager.getSession()) {
-            List<Record> records = session.readTransaction(tx -> tx.run("MATCH (c:City) WHERE c.name = $name RETURN c.id", parameters("name", name)).list());
+            List<Record> records = session.readTransaction(tx -> tx.run("MATCH (c:City), (b:County) WHERE c.name = $name" +
+                    " AND (c)-[:CITY_OF]->(b) RETURN c.id, b.name ", parameters("name", name)).list());
             if(!records.isEmpty())
-            return new City(records.get(0).get("c.id").asInt(), name);
+            return new City(records.get(0).get("c.id").asInt(), name, records.get(0).get("b.name").asString());
             else return null;
         }catch (Exception e){
             e.printStackTrace();
