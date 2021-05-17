@@ -12,7 +12,7 @@ services:
       - 7474:7474
 
 
-  springapi:
+  web:
     image: correct-address
     links:
       - database
