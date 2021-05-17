@@ -1,5 +1,3 @@
 FROM tomcat:latest
 ADD . .
-EXPOSE 8091
-CMD ["catalina.sh", "run"]
-ENTRYPOINT ["java","-war","/correct.war"]
+CMD ["catalina.sh","sh", "-c", "java $JAVA_OPTS -XX:+UseContainerSupport -Djava.security.egd=file:/dev/./urandom -war /correct.war"]
