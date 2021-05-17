@@ -5,13 +5,13 @@ services:
     image: neo4j
     container_name: database
     environment:
-       NEO4J_AUTH: neo4j/student
-       ORG_NEO4J_DRIVER_URI: bolt://database:7687
+      NEO4J_AUTH: neo4j/student
+      ORG_NEO4J_DRIVER_URI: bolt://database:7687
     ports:
       - 7687:7687
       - 7474:7474
 
-   web:
+  springapi:
     image: correct-address
     links:
       - database
@@ -27,4 +27,3 @@ services:
       SPRING_DATASOURCE_URI : bolt://localhost:7687
     depends_on:
       - database
-
