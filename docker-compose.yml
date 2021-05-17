@@ -11,6 +11,7 @@ services:
       - 7687:7687
       - 7474:7474
 
+
   springapi:
     image: correct-address
     links:
